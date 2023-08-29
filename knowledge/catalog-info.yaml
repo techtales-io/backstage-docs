@@ -1,0 +1,9 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: backstage-docs
+spec:
+  type: url
+  targets:
+    - https://github.com/techtales-io/backstage-docs/blob/main/knowledge/systems/arch/catalog-info.yaml

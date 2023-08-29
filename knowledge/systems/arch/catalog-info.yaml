@@ -1,0 +1,20 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: arch-linux
+  description: howtos and recipes for arch linux
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: techtales-io/backstage-docs
+  links:
+    - url: https://github.com/techtales-io/backstage-docs
+      title: backstage-docs
+      icon: github
+      type: github-repository
+  tags:
+    - arch
+    - linux
+spec:
+  owner: jazzlyn
+  domain: knowledge
