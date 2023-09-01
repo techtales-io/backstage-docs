@@ -16,5 +16,5 @@ metadata:
     - arch
     - linux
 spec:
-  owner: jazzlyn
+  owner: user:default/jazzlyn
   domain: knowledge
