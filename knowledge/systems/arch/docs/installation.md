@@ -6,7 +6,7 @@
 
 ## Create usb medium
 
-```console
+```shell
 dd bs=4M if=path/to/archlinux.iso of=/dev/sdx status=progress oflag=sync
 ```
 
@@ -23,13 +23,13 @@ Boot the Arch USB medium.
 
 Set desired keymap
 
-```console
+```shell
 loadkeys de-latin1
 ```
 
 ## Partitioning and formatting
 
-```console
+```shell
 fdisk /dev/nvme0n1
 ```
 
@@ -43,7 +43,7 @@ Create partitions
 
 Format EFI, if needed
 
-```console
+```shell
 mkfs.fat -F32 /dev/nvme0n1p1
 ```
 
@@ -53,19 +53,19 @@ mkfs.fat -F32 /dev/nvme0n1p1
 
 ## Setup Internet Connection
 
-```console
+```shell
 iwctl –passphrase passphrase station wlan0 connect <SSID>
 ```
 
 ## Sync clock
 
-```console
+```shell
 timedatectl set-ntp true
 ```
 
 ## Format and encrypt btrfs
 
-```console
+```shell
 cryptsetup luksFormat --type=luks2 /dev/nvme0n1p2
 cryptsetup open /dev/nvme0n1p2 luks
 mkfs.btrfs -L luks /dev/mapper/luks
@@ -73,7 +73,7 @@ mkfs.btrfs -L luks /dev/mapper/luks
 
 ### Create btrfs subvolumes
 
-```console
+```shell
 mount -t btrfs /dev/mapper/luks /mnt
 btrfs subvolume create /mnt/@root
 btrfs subvolume create /mnt/@home
@@ -82,7 +82,7 @@ btrfs subvolume create /mnt/@snapshots
 
 ### Mount btrfs subvolumes
 
-```console
+```shell
 umount /mnt
 mount -o subvol=@root /dev/mapper/luks /mnt
 mkdir /mnt/{home,.snapshots}
@@ -92,14 +92,14 @@ mount -o subvol=@snapshots /dev/mapper/luks /mnt/.snapshots
 
 ### Mount EFI partition
 
-```console
+```shell
 mkdir /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 ```
 
 ## Install the base system and a few packages
 
-```console
+```shell
 pacstrap /mnt \
   base \
   base-devel \
@@ -116,7 +116,7 @@ pacstrap /mnt \
 
 ## Generate fstab
 
-```console
+```shell
 genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
@@ -129,6 +129,73 @@ For btrfs filesystems consider:
 
 ## Enter the new system
 
-```console
+```shell
 arch-chroot /mnt
+```
+
+## Configure base system
+
+### Setup time
+
+```shell
+rm /etc/localtime
+ln -sf /usr/share/zoneinfo/Europe/Vienna /etc/localtime
+hwclock --systohc
+```
+
+### Setup required locales
+
+Uncomment needed locales, f.e. en_DK.UTF-8.
+
+```shell
+vim /etc/locale.gen
+```
+
+Generate locales.
+
+```shell
+locale-gen
+```
+
+Create needed files.
+
+```shell
+echo "LANG=en_DK.UTF-8" >> /etc/locale.conf
+echo "KEYMAP=de-latin1" >> /etc/vconsole.conf
+```
+
+### Set hostname
+
+Set hostname in /etc/hosts.
+
+```shell
+127.0.0.1   localhost
+::1         localhost
+127.0.1.1   <hostname>.localdomain <hostname>
+```
+
+### Setup user
+
+Set root password first.
+
+```shell
+passwd
+```
+
+Add your non-root user.
+
+```shell
+useradd -m -g users -G wheel -s /bin/bash <username>
+```
+
+Set your user password.
+
+```shell
+passwd <username>
+```
+
+Grant sudo permissions to your user.
+
+```shell
+echo '<username> ALL=(ALL) ALL' > /etc/sudoers.d/<username>
 ```
