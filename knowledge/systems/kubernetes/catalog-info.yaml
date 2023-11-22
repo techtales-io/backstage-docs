@@ -1,0 +1,19 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: kubernetes
+  description: howtos and recipes for kubernetes
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: techtales-io/backstage-docs
+  links:
+    - url: https://github.com/techtales-io/backstage-docs
+      title: backstage-docs
+      icon: github
+      type: github-repository
+  tags:
+    - kubernetes
+spec:
+  owner: user:default/jazzlyn
+  domain: knowledge

@@ -7,3 +7,4 @@ spec:
   type: url
   targets:
     - https://github.com/techtales-io/backstage-docs/blob/main/knowledge/systems/arch/catalog-info.yaml
+    - https://github.com/techtales-io/backstage-docs/blob/main/knowledge/systems/kubernetes/catalog-info.yaml
