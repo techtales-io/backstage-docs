@@ -2,7 +2,9 @@
 site_name: kubernetes
 site_description: howtos and recipes for kubernetes
 
-# navigation structure
 nav:
   - Overview: index.md
   - Flux helmrelease: flux-helmrelease.md
+
+plugins:
+  - techdocs-core

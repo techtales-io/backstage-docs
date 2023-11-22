@@ -2,7 +2,9 @@
 site_name: arch linux
 site_description: howtos and recipes for arch linux
 
-# navigation structure
 nav:
   - Overview: index.md
   - Installation: installation.md
+
+plugins:
+  - techdocs-core
