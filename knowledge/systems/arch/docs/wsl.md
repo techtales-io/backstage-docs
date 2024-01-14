@@ -33,19 +33,35 @@ wsl -d arch
 
 ## Setup arch
 
-initialize system
+initialize pacman
 
 ```shell
 pacman-key --init
 pacman-key --populate archlinux
-curl "https://archlinux.org/mirrorlist/?country=AT&protocol=https&ip_version=4&use_mirror_status=on" > /etc/pacman.d/mirrorlist
+```
+
+update mirrorlist
+
+```shell
+curl "https://archlinux.org/mirrorlist/?country=AT&protocol=https&ip_version=4&use_mirror_status=on" > /etc/pacman.d/mirrorlist.new
+sed "s/#Server/Server/" /etc/pacman.d/mirrorlist.new > /etc/pacman.d/mirrorlist
+rm /etc/pacman.d/mirrorlist.new
+```
+
+install base
+
+```shell
 pacman -Syu
 pacman -S base base-devel git vim
 ```
 
 ## Configure WSL2
 
-create `/etc/wsl.conf`
+create wsl config
+
+```shell
+vim /etc/wsl.conf
+```
 
 ```shell
 [boot]
