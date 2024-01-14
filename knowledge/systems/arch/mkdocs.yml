@@ -5,6 +5,7 @@ site_description: howtos and recipes for arch linux
 nav:
   - Overview: index.md
   - Installation: installation.md
+  - WSL: wsl.md
 
 plugins:
   - techdocs-core
