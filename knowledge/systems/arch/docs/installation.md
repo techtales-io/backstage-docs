@@ -289,3 +289,25 @@ If X11 unknown, set.
 ```shell
 sudo localectl --no-convert set-x11-keymap de
 ```
+
+### Setup Nvidia (optional)
+
+Install drivers.
+
+```shell
+yay -Sy nvidia-open
+```
+
+Blacklist nouveau.
+
+> vim /etc/modprobe.d/nvidia.conf
+
+```shell
+blacklist nouveau
+blacklist nouveaufb
+blacklist lbm-nouveau
+options nouveau modeset=0
+alias nouveau off
+alias nouveaufb off
+alias lbm-nouveau off
+```
