@@ -269,15 +269,6 @@ systemctl start NetworkManager
 nmtui
 ```
 
-### Configure Nix
-
-```shell
-systemctl enable nix-daemon
-systemctl start nix-daemon
-nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-nix-channel --update
-```
-
 ### Check keymap layout
 
 ```shell
