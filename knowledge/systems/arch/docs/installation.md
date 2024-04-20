@@ -49,7 +49,7 @@ mkfs.fat -F32 /dev/nvme0n1p1
 
 !!! note
 
-    Install Windows now (optional)
+Install Windows now (optional)
 
 ## Setup Internet Connection
 
@@ -198,4 +198,94 @@ Grant sudo permissions to your user.
 
 ```shell
 echo '<username> ALL=(ALL) ALL' > /etc/sudoers.d/<username>
+```
+
+### Configure mkinitcpio
+
+> vim /etc/mkinitcpio.conf
+
+```shell
+MODULES=(i915)
+HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole sd-encrypt filesystems fsck)
+```
+
+Regenerate image.
+
+```shell
+mkinitcpio -p linux
+```
+
+### Setup bootloader
+
+Setup systemd boot.
+
+```shell
+bootctl --path=/boot install
+```
+
+Copy uuid to new entries (2x).
+
+```shell
+cryptsetup luksUUID /dev/nvme0n1p2 >> /boot/loader/entries/arch.conf
+cryptsetup luksUUID /dev/nvme0n1p2 >> /boot/loader/entries/emergency.conf
+```
+
+Adapt entries.
+
+> vim /boot/loader/entries/arch.conf
+
+```shell
+title       Arch Linux
+linux         /vmlinuz-linux
+initrd      /intel-ucode.img
+initrd      /initramfs-linux.img
+options   rw luks.uuid=<uuid> luks.name=<uuid>=luks root=/dev/mapper/luks rootflags=subvol=@root quiet mem_sleep_default=deep
+```
+
+> vim /boot/loader/entries/emergency.conf
+
+```shell
+title         Emergency Mode
+options     rw luks.uuid=<uuid> luks.name=<uuid>=luks root=/dev/mapper/luks rootflags=subvol=@root quiet mem_sleep_default=deep systemd.unit=rescue.target
+```
+
+Set default entry at start.
+
+> vim /boot/loader/loader.conf
+
+```shell
+default arch.conf
+timeout 10
+editor  0
+```
+
+Exit and reboot.
+
+### Configure NetworkManager
+
+```shell
+systemctl enable NetworkManager
+systemctl start NetworkManager
+nmtui
+```
+
+### Configure Nix
+
+```shell
+systemctl enable nix-daemon
+systemctl start nix-daemon
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+nix-channel --update
+```
+
+### Check keymap layout
+
+```shell
+localectl status
+```
+
+If X11 unknown, set.
+
+```shell
+sudo localectl --no-convert set-x11-keymap de
 ```
