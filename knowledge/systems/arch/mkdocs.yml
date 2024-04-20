@@ -5,6 +5,9 @@ site_description: howtos and recipes for arch linux
 nav:
   - Overview: index.md
   - Installation: installation.md
+  - Reset: reset.md
+  - Nix: nix.md
+  - Nvidia: nvidia.md
   - WSL: wsl.md
 
 plugins:
