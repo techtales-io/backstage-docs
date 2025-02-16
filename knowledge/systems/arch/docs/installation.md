@@ -103,15 +103,14 @@ mount /dev/nvme0n1p1 /mnt/boot
 pacstrap /mnt \
   base \
   base-devel \
+  btrfs-progs \
   git \
   intel-ucode \
   linux \
   linux-firmware \
   networkmanager \
   network-manager-applet \
-  networkmanager-openvpn \
-  openssh \
-  openvpn
+  openssh
 ```
 
 ## Generate fstab
@@ -120,7 +119,7 @@ pacstrap /mnt \
 genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
-Verify and adjust if necessary.
+- change permissions for /boot `fmask=0177,dmask=0077`
 
 For btrfs filesystems consider:
 
@@ -206,7 +205,7 @@ echo '<username> ALL=(ALL) ALL' > /etc/sudoers.d/<username>
 
 ```shell
 MODULES=(i915)
-HOOKS=(base systemd autodetect modconf block keyboard sd-vconsole sd-encrypt filesystems fsck)
+HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)
 ```
 
 Regenerate image.
@@ -279,4 +278,23 @@ If X11 unknown, set.
 
 ```shell
 sudo localectl --no-convert set-x11-keymap de
+```
+
+### Configure SSH
+
+Install `gnome-keyring`.
+
+For i3 add to startup (f.e. .xinitrc)
+
+```shell
+dbus-update-activation-environment --all
+gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
+export SSH_AUTH_SOCK=/run/user/1000/gcr/ssh
+```
+
+Enable and start ssh agent.
+
+```shell
+systemctl --user enable gcr-ssh-agent.socket
+systemctl --user start gcr-ssh-agent.socket
 ```
