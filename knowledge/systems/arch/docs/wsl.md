@@ -9,11 +9,18 @@
 in a linux environment
 
 ```shell
-tar -zxvf archlinux-bootstrap-<version>-x86_64.tar.gz
-tar -zcvf archlinux-bootstrap-<version>-x86_64_WSL.tar.gz root.x86_64/
+sudo tar -I zstd -xf archlinux-bootstrap-<version>-x86_64.tar.zst
+sudo tar -C root.x86_64/ -zcvf archlinux-bootstrap-<version>-x86_64_WSL.tar .
 ```
 
 ## Setup WSL2
+
+enable wsl features in windows, if not yet done.
+
+```shell
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+```
 
 install from store, if not yet done.
 
@@ -27,7 +34,7 @@ create dir in user home on windows environment, import arch to wsl and start.
 
 ```shell
 mkdir ./.wsl
-wsl --import arch .\.wsl\arch .\Downloads\archlinux-bootstrap-<version>-x86_64_WSL.tar.gz
+wsl --import arch .\.wsl\arch .\Downloads\archlinux-bootstrap-<version>-x86_64_WSL.tar
 wsl -d arch
 ```
 
