@@ -59,6 +59,8 @@ iwctl –passphrase passphrase station wlan0 connect <SSID>
 
 ## Sync clock
 
+Enable and start SNTP client systemd-timesyncd.service.
+
 ```shell
 timedatectl set-ntp true
 ```

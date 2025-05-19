@@ -6,6 +6,7 @@ nav:
   - Overview: index.md
   - Installation: installation.md
   - Reset: reset.md
+  - Btrfs: btrfs.md
   - Docker: docker.md
   - Nix: nix.md
   - Nvidia: nvidia.md
