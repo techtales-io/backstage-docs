@@ -1,0 +1,10 @@
+---
+site_name: home-automation
+site_description: howtos and recipes for home-automation
+
+nav:
+  - Overview: index.md
+  - Qingping: qingping.md
+
+plugins:
+  - techdocs-core
