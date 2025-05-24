@@ -41,9 +41,9 @@ Select device model and the device and configuration recently created.
 
 ### Add device to network and add firewall rules
 
-Goto <https://opnsense.techtales.io>.
-Goto Services > ISC DHCPv4 > Leases and check for the new device in the iot network.
-Name should be ``snow2` or something, double check the MAC address on the device Settings > About.
+Goto <https://opnsense.techtales.io/ui/dhcpv4/leases>.
+Check for the new device in the iot network, name should be `snow2` or something.
+Double check the MAC address on the device Settings > About.
 Configure static IP, see similar entries.
 Hit "Save" and "Apply changes" on top!
 
