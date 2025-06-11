@@ -8,8 +8,12 @@
 
 ```shell
 pacman -Sy docker
-systemctl enable docker
-systemctl start docker
+```
+
+Enable and start docker.
+
+```shell
+systemctl enable --now docker
 ```
 
 Add user to docker group.
