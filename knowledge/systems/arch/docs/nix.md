@@ -8,8 +8,7 @@
 
 ```shell
 pacman -Sy nix zsh-nix-shell
-systemctl enable nix-daemon
-systemctl start nix-daemon
+systemctl enable --now nix-daemon
 ```
 
 Add user to nix group.

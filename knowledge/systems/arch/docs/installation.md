@@ -112,7 +112,8 @@ pacstrap /mnt \
   linux-firmware \
   networkmanager \
   network-manager-applet \
-  openssh
+  openssh \
+  vim
 ```
 
 ## Generate fstab
@@ -265,8 +266,7 @@ Exit and reboot.
 ### Configure NetworkManager
 
 ```shell
-systemctl enable NetworkManager
-systemctl start NetworkManager
+systemctl enable --now NetworkManager
 nmtui
 ```
 
@@ -280,23 +280,4 @@ If X11 unknown, set.
 
 ```shell
 sudo localectl --no-convert set-x11-keymap de
-```
-
-### Configure SSH
-
-Install `gnome-keyring`.
-
-For i3 add to startup (f.e. .xinitrc)
-
-```shell
-dbus-update-activation-environment --all
-gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
-export SSH_AUTH_SOCK=/run/user/1000/gcr/ssh
-```
-
-Enable and start ssh agent.
-
-```shell
-systemctl --user enable gcr-ssh-agent.socket
-systemctl --user start gcr-ssh-agent.socket
 ```
