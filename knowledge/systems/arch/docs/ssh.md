@@ -6,20 +6,16 @@
 
 ## Setup
 
-Install `gnome-keyring`.
-
-Enable and start daemon and ssh agent.
+Enable and start ssh agent service (part of `openssh`).
 
 ```shell
-systemctl --user enable --now gnome-keyring-daemon
-systemctl --user enable --now gcr-ssh-agent.socket
+systemctl --user enable --now ssh-agent.service
 ```
 
-### Configuration
+## Configuration
 
-Add to startup (f.e. .zshrc, .xinitrc)
+Add env variable to f.e. ~/.zshenv:
 
 ```shell
-dbus-update-activation-environment --all
-export SSH_AUTH_SOCK=/run/user/1000/gcr/ssh
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 ```
