@@ -37,7 +37,7 @@ Create partitions
 
 | Size  | Type                 | Notes                |
 | ----- | -------------------- | -------------------- |
-| 512M  | EFI partition        |                      |
+| +512M | EFI partition        |                      |
 | -250G | Linux partition      | to be encrypted      |
 | 250G  | Microsoft basic data | optional for Windows |
 
