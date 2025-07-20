@@ -168,7 +168,9 @@ echo "KEYMAP=de-latin1" >> /etc/vconsole.conf
 
 ### Set hostname
 
-Set hostname in /etc/hosts.
+Set hostname in /etc/hostname.
+
+Add hostname to /etc/hosts.
 
 ```shell
 127.0.0.1   localhost
