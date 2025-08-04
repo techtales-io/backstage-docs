@@ -37,7 +37,7 @@ Create partitions
 
 | Size  | Type                 | Notes                |
 | ----- | -------------------- | -------------------- |
-| 512M  | EFI partition        |                      |
+| +512M | EFI partition        |                      |
 | -250G | Linux partition      | to be encrypted      |
 | 250G  | Microsoft basic data | optional for Windows |
 
@@ -168,7 +168,9 @@ echo "KEYMAP=de-latin1" >> /etc/vconsole.conf
 
 ### Set hostname
 
-Set hostname in /etc/hosts.
+Set hostname in /etc/hostname.
+
+Add hostname to /etc/hosts.
 
 ```shell
 127.0.0.1   localhost

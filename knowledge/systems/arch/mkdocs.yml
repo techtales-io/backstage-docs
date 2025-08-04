@@ -10,6 +10,9 @@ nav:
   - Docker: docker.md
   - Nix: nix.md
   - Nvidia: nvidia.md
+  - Pipewire: pipewire.md
+  - Secrets: secrets.md
+  - SSH: ssh.md
   - WSL: wsl.md
 
 plugins:
