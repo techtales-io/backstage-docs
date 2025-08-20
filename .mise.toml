@@ -2,5 +2,5 @@
 experimental = true
 
 [tools]
-direnv = "2.34.0"
+direnv = "2.37.1"
 pre-commit = "3.8.0"
