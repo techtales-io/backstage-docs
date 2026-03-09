@@ -18,6 +18,7 @@ Set packages that should be kept as explicit.
 pacman -D --asexplicit \
   base \
   base-devel \
+  git \
   intel-ucode \
   linux \
   linux-firmware
