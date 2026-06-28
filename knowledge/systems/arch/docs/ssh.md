@@ -12,8 +12,6 @@ Enable and start ssh agent service (part of `openssh`).
 systemctl --user enable --now ssh-agent.service
 ```
 
-### Configuration
-
 Add env variable to f.e. ~/.zshenv:
 
 ```shell
@@ -21,6 +19,20 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 ```
 
 ## Enable Daemon
+
+create config
+
+```shell
+sudo vim /etc/ssh/sshd_config.d/20-force_publickey_auth.conf
+```
+
+```shell
+AuthenticationMethods publickey
+PasswordAuthentication no
+PermitRootLogin no
+```
+
+### Systemd
 
 ```shell
 sudo systemctl enable --now sshd.service
