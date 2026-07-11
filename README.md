@@ -1,6 +1,5 @@
-<!-- markdownlint-disable MD041 -->
 <!-- markdownlint-disable MD033 -->
-<!-- markdownlint-disable MD028 -->
+<!-- markdownlint-disable MD041 -->
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -14,36 +13,26 @@
 [![pre-commit][pre-commit-shield]][pre-commit-url]
 [![taskfile][taskfile-shield]][taskfile-url]
 
-# Project
+# Backstage docs
 
-Short project description
+Backstage documentation
 
-<br />
-<!-- TABLE OF CONTENTS -->
 <details>
-  <summary style="font-size:1.2em;">📑 Table of Contents</summary>
-  <ol>
-    <li><a href="#structure">Structure</a></li>
-    <li><a href="#code-style">Code-Style</a></li>
-    <li><a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisties</a></li>
-      </ul>
-    </li>
-    <li><a href="#configuration">Configuration</a></li>
-    <li><a href="#contribution">Contribution</a></li>
-    <li><a href="#known-issues">Known Issues</a></li>
-  </ol>
+  <summary style="font-size:1.2em;">Table of Contents</summary>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Code-Style](#code-style)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Initialize repository](#initialize-repository)
+- [Configuration](#configuration)
+- [Contribution](#contribution)
+- [Known Issues](#known-issues)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 </details>
-<br />
-
-## Structure
-
-```console
-.
-├── README.md                   # this document
-└── Taskfile.yaml
-```
 
 ## Code-Style
 
@@ -55,14 +44,14 @@ Short project description
 
 ### Prerequisites
 
-- [pre-commit][pre-commit]
+- [pre-commit][pre-commit-url]
 
 ### Initialize repository
 
 pre-commit framework needs to get initialized.
 
 ```console
-pre-commit install
+task pre-commit:init
 ```
 
 ## Configuration
@@ -82,7 +71,7 @@ pre-commit install
 
 <!-- Links -->
 
-[pre-commit]: https://pre-commit.com/
+<!-- TBD -->
 
 <!-- Badges -->
 
