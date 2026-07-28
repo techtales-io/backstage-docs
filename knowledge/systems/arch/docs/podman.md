@@ -2,32 +2,24 @@
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD046 -->
 
-# Podman
+# Podman (rootless)
 
 ## Setup
 
 ```shell
-pacman -Sy podman podman-docker podman-compose
-```
-
-Add subuid/subgrids to user.
-
-```shell
-sudo usermod --add-subuids 10000-75535 user
-sudo usermod --add-subgids 10000-75535 user
+pacman -Sy podman podman-compose
 ```
 
 ## Configuration
 
-Configure containers if migrating from docker.
-
-.config/containers/registries.conf
+.config/containers/containers.conf
 
 ```shell
 [containers]
-privileged = false
-read_only = true
 userns = "auto"
+
+[network]
+pasta_options = ["--ipv4-only"]
 ```
 
 .config/containers/registries.conf
@@ -36,6 +28,10 @@ userns = "auto"
 unqualified-search-registries = ["docker.io"]
 ```
 
-## Usage
+Enable and start.
 
-Run as usual with docker commands (podman-docker).
+```shell
+systemctl --user enable --now podman.socket
+```
+
+Optional set `alias docker="podman"`.
