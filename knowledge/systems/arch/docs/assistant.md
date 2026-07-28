@@ -11,7 +11,7 @@
 disable password login
 
 ```shell
-sudo useradd -m -g users -G docker -s /bin/bash assistant
+sudo useradd -m -g users -s /bin/bash assistant
 sudo passwd -l assistant
 ```
 
