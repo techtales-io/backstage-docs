@@ -38,7 +38,7 @@ Host assistant
   IdentityFile ~/.ssh/id_ed25519
 ```
 
-#### Setup ssh with yubikey touch
+#### Setup ssh with yubikey
 
 If you have a yubikey and want to press it every time you establish an ssh connection, then create a touch key pair.
 VScode requires 2 touches per remote connection (anytime you open a remote folder).
@@ -52,6 +52,12 @@ Host assistant
   HostName localhost
   User assistant
   IdentityFile ~/.ssh/id_ed25519_sk
+```
+
+If you DON'T want to press it for the ssh connection, create a notouch key pair.
+
+```shell
+ssh-keygen -t -O no-touch-required ed25519-sk
 ```
 
 ### Setup yubikey access for the assistant
@@ -117,6 +123,8 @@ sudo -u assistant /bin/bash
 ```
 
 copy public key to ~/.ssh/authorized_keys
+If you have a no touch key, add before the public key `no-touch-required sk-ssh...` otherwise the key will get rejected.
+
 logout and ssh to the assistant.
 
 ```shell
@@ -176,7 +184,7 @@ echo "PERSONAL_TOKEN" > ~/.secrets/github-token-personal
 echo "ORG_TOKEN" > ~/.secrets/github-token-org
 ```
 
-then configure a `mise.toml` in `.config/mise/config.toml`  for the default config
+then configure a `mise.toml` in `.config/mise/config.toml` for the default config
 and one in any project folder that needs a different token, f.e. `projects/org`
 
 ```shell
