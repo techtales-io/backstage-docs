@@ -258,3 +258,12 @@ download and install openchamber desktop from `https://openchamber.dev/download/
 mkdir -p ~/.local/bin
 install -m 755 OpenChamber-*-linux-x86_64.AppImage ~/.local/bin/openchamber
 ```
+
+in the desktop app goto settings > remote instances > other openchamber servers.
+add server and click save.
+
+```shell
+http://127.0.0.1:3000
+```
+
+on connect (right upper corner `Local`) password will be asked once > trust the device.
