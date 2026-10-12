@@ -209,7 +209,7 @@ bun add -g @openchamber/web
 bun add -g --trust @opencode/cli
 ```
 
-create systemd unit for the webserver `openchamber.service`
+create systemd unit for the server `openchamber.service`
 
 ```shell
 [Unit]
@@ -221,7 +221,7 @@ Type=simple
 
 Environment="PATH=%h/.bun/bin:/usr/local/bin:/usr/bin:/bin"
 EnvironmentFile=-%h/.config/openchamber/startup.env
-ExecStart=%h/.bun/bin/openchamber serve --foreground --port 3000 --host 127.0.0.1 --api-only
+ExecStart=/usr/bin/bun %h/.bun/bin/openchamber serve --foreground --port 3000 --host 0.0.0.0 --api-only
 
 Restart=always
 RestartSec=5
@@ -231,17 +231,17 @@ SuccessExitStatus=143
 WantedBy=default.target
 ```
 
+set password for web ui
+
+```shell
+mkdir -p ~/.config/openchamber
+echo "OPENCHAMBER_UI_PASSWORD=<pass>" > ~/.config/openchamber/startup.env
+```
+
 enable and start
 
 ```shell
 systemctl enable --now --user openchamber.service
-```
-
-set password for web ui and restart service.
-
-```shell
-openchamber --ui-password <strong-password>
-systemctl restart --user openchamber.service
 ```
 
 verify
@@ -252,18 +252,31 @@ systemctl status --user openchamber.service
 
 #### Setup in main user
 
-download and install openchamber desktop from `https://openchamber.dev/download/`.
+download and install app from `https://openchamber.dev/download/`.
+
+##### desktop app
 
 ```shell
 mkdir -p ~/.local/bin
 install -m 755 OpenChamber-*-linux-x86_64.AppImage ~/.local/bin/openchamber
 ```
 
-in the desktop app goto settings > remote instances > other openchamber servers.
+in the desktop app on the same machine goto settings > remote instances > other openchamber servers.
 add server and click save.
 
 ```shell
 http://127.0.0.1:3000
 ```
 
-on connect (right upper corner `Local`) password will be asked once > trust the device.
+on connect (left bottom corner `Local`) password will be asked once > trust the device.
+
+##### phone
+
+in the desktop app on the same machine goto settings > remote instances > connect to this server > add device.
+scan the qr code with your phone.
+
+alternatively, from the commandline:
+
+```shell
+openchamber connect-url --port 3000 --qr
+```
