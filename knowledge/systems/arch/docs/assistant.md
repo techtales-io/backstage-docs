@@ -4,7 +4,9 @@
 
 # AI Assistant Setup
 
-## Main user bootstraps the assistant user
+## Bootstrap assistant user and configure
+
+Main user does the assistant user setup.
 
 ### Create user
 
@@ -114,7 +116,7 @@ sudo find /srv/shared/assistant -type d -exec chmod 2775 {} +
 sudo find /srv/shared/assistant -type f -exec chmod 0664 {} +
 ```
 
-## Switch to the assistant
+## Setup Assistant
 
 The following is done as assistant user (via login/ssh).
 
@@ -195,3 +197,64 @@ _.file = [
 ```
 
 don't forget to adjust your assistant's permissions so that it cannot read files from the secrets folder.
+
+### Setup Openchamber
+
+#### Setup in assistant user
+
+install Openchamber and Opencode with bun to keep update functionality.
+
+```shell
+bun add -g @openchamber/web
+bun add -g --trust @opencode/cli
+```
+
+create systemd unit for the webserver `openchamber.service`
+
+```shell
+[Unit]
+Description=OpenChamber webserver
+After=network-online.target
+
+[Service]
+Type=simple
+
+Environment="PATH=%h/.bun/bin:/usr/local/bin:/usr/bin:/bin"
+EnvironmentFile=-%h/.config/openchamber/startup.env
+ExecStart=%h/.bun/bin/openchamber serve --foreground --port 3000 --host 127.0.0.1 --api-only
+
+Restart=always
+RestartSec=5
+SuccessExitStatus=143
+
+[Install]
+WantedBy=default.target
+```
+
+enable and start
+
+```shell
+systemctl enable --now --user openchamber.service
+```
+
+set password for web ui and restart service.
+
+```shell
+openchamber --ui-password <strong-password>
+systemctl restart --user openchamber.service
+```
+
+verify
+
+```shell
+systemctl status --user openchamber.service
+```
+
+#### Setup in main user
+
+download and install openchamber desktop from `https://openchamber.dev/download/`.
+
+```shell
+mkdir -p ~/.local/bin
+install -m 755 OpenChamber-*-linux-x86_64.AppImage ~/.local/bin/openchamber
+```
