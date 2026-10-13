@@ -4,7 +4,9 @@
 
 # AI Assistant Setup
 
-## Main user bootstraps the assistant user
+## Bootstrap assistant user and configure
+
+Main user does the assistant user setup.
 
 ### Create user
 
@@ -114,7 +116,7 @@ sudo find /srv/shared/assistant -type d -exec chmod 2775 {} +
 sudo find /srv/shared/assistant -type f -exec chmod 0664 {} +
 ```
 
-## Switch to the assistant
+## Setup Assistant
 
 The following is done as assistant user (via login/ssh).
 
@@ -195,3 +197,86 @@ _.file = [
 ```
 
 don't forget to adjust your assistant's permissions so that it cannot read files from the secrets folder.
+
+### Setup Openchamber
+
+#### Setup in assistant user
+
+install Openchamber and Opencode with bun to keep update functionality.
+
+```shell
+bun add -g @openchamber/web
+bun add -g --trust @opencode/cli
+```
+
+create systemd unit for the server `openchamber.service`
+
+```shell
+[Unit]
+Description=OpenChamber webserver
+After=network-online.target
+
+[Service]
+Type=simple
+
+Environment="PATH=%h/.bun/bin:/usr/local/bin:/usr/bin:/bin"
+EnvironmentFile=-%h/.config/openchamber/startup.env
+ExecStart=/usr/bin/bun %h/.bun/bin/openchamber serve --foreground --port 3000 --host 0.0.0.0 --api-only
+
+Restart=always
+RestartSec=5
+SuccessExitStatus=143
+
+[Install]
+WantedBy=default.target
+```
+
+set password for web ui
+
+```shell
+mkdir -p ~/.config/openchamber
+echo "OPENCHAMBER_UI_PASSWORD=<pass>" > ~/.config/openchamber/startup.env
+```
+
+enable and start
+
+```shell
+systemctl enable --now --user openchamber.service
+```
+
+verify
+
+```shell
+systemctl status --user openchamber.service
+```
+
+#### Setup in main user
+
+download and install app from `https://openchamber.dev/download/`.
+
+##### desktop app
+
+```shell
+mkdir -p ~/.local/bin
+install -m 755 OpenChamber-*-linux-x86_64.AppImage ~/.local/bin/openchamber
+```
+
+in the desktop app on the same machine goto settings > remote instances > other openchamber servers.
+add server and click save.
+
+```shell
+http://127.0.0.1:3000
+```
+
+on connect (left bottom corner `Local`) password will be asked once > trust the device.
+
+##### phone
+
+in the desktop app on the same machine goto settings > remote instances > connect to this server > add device.
+scan the qr code with your phone.
+
+alternatively, from the commandline:
+
+```shell
+openchamber connect-url --port 3000 --qr
+```
