@@ -25,11 +25,7 @@ sudo loginctl enable-linger assistant
 
 ### Setup ssh
 
-create keypair
-
-```shell
-ssh-keygen
-```
+create keypair (optionally with fido2 or tpm, see [ssh.md](./ssh.md))
 
 add the assistant host to `~/.ssh/config`
 
@@ -37,34 +33,12 @@ add the assistant host to `~/.ssh/config`
 Host assistant
   HostName localhost
   User assistant
-  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/id_xxx
 ```
 
-#### Setup ssh with yubikey
+### Fido2 access
 
-If you have a yubikey and want to press it every time you establish an ssh connection, then create a touch key pair.
-VScode requires 2 touches per remote connection (anytime you open a remote folder).
-
-```shell
-ssh-keygen -t ed25519-sk
-```
-
-```shell
-Host assistant
-  HostName localhost
-  User assistant
-  IdentityFile ~/.ssh/id_ed25519_sk
-```
-
-If you DON'T want to press it for the ssh connection, create a notouch key pair.
-
-```shell
-ssh-keygen -t -O no-touch-required ed25519-sk
-```
-
-### Setup yubikey access for the assistant
-
-The yubikey needs to be present for the git signing.
+Non-root user need access to yubikey.
 
 check if key exists, then get vendor id
 
@@ -137,39 +111,21 @@ if you have dotfiles for the assistant, you can check them out now and run setup
 
 ### Setup Git signing
 
-```shell
-systemctl --user enable --now ssh-agent
-```
-
-generate ssh key pair for signing only.
-
-if you want to use yubikey, generate a fido key pair with no touch (edit file name and add "notouch", see below)
-
-```shell
-ssh-keygen -t -O no-touch-required ed25519-sk
-```
-
-set proper permissions
-
-```shell
-chmod 700 /home/assistant/.ssh
-chmod 600 /home/assistant/.ssh/id_ed25519_sk_notouch
-chmod 644 /home/assistant/.ssh/id_ed25519_sk_notouch.pub
-```
+setup ssh (optionally with fido2 no-touch or tpm, see [ssh.md](./ssh.md))
 
 add the key to the github signing keys page.
 
 then generate ssh config
 
 ```shell
-echo "AddKeysToAgent yes" > /home/assistant/.ssh/config
-chmod 600 /home/assistant/.ssh/config
+echo "AddKeysToAgent yes" > ~/.ssh/config
+chmod 600 ~/.ssh/config
 ```
 
 and add key to `~/.config/git/allowed_signers`
 
 ```shell
-<user> <id.pub>
+<github user> <id.pub>
 ```
 
 setup git config in `~/.config/git/config`
