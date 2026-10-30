@@ -54,7 +54,7 @@ Install Windows now (optional)
 ## Setup Internet Connection
 
 ```shell
-iwctl –passphrase passphrase station wlan0 connect <SSID>
+iwctl station wlan0 connect <SSID>
 ```
 
 ## Sync clock
@@ -65,7 +65,9 @@ Enable and start SNTP client systemd-timesyncd.service.
 timedatectl set-ntp true
 ```
 
-## Format and encrypt btrfs
+## Setup btrfs
+
+### Create btrfs volume
 
 ```shell
 cryptsetup luksFormat --type=luks2 /dev/nvme0n1p2
@@ -73,7 +75,15 @@ cryptsetup open /dev/nvme0n1p2 luks
 mkfs.btrfs -L luks /dev/mapper/luks
 ```
 
+for unencrypted volumes
+
+```shell
+mkfs.btrfs /dev/nvme0n1p2
+```
+
 ### Create btrfs subvolumes
+
+use `/dev/nvme0n1p2`for unencrypted volumes
 
 ```shell
 mount -t btrfs /dev/mapper/luks /mnt
@@ -83,6 +93,8 @@ btrfs subvolume create /mnt/@snapshots
 ```
 
 ### Mount btrfs subvolumes
+
+use `/dev/nvme0n1p2`for unencrypted volumes
 
 ```shell
 umount /mnt
@@ -234,23 +246,35 @@ cryptsetup luksUUID /dev/nvme0n1p2 >> /boot/loader/entries/arch.conf
 cryptsetup luksUUID /dev/nvme0n1p2 >> /boot/loader/entries/emergency.conf
 ```
 
+For unencrypted volumes (1x).
+
+```shell
+blkid -s UUID -o value /dev/nvme0n1p2 >> /boot/loader/entries/arch.conf
+```
+
 Adapt entries.
 
 > vim /boot/loader/entries/arch.conf
 
 ```shell
 title       Arch Linux
-linux         /vmlinuz-linux
+linux       /vmlinuz-linux
 initrd      /intel-ucode.img
 initrd      /initramfs-linux.img
-options   rw luks.uuid=<uuid> luks.name=<uuid>=luks root=/dev/mapper/luks rootflags=subvol=@root quiet mem_sleep_default=deep
+options     rw luks.uuid=<uuid> luks.name=<uuid>=luks root=/dev/mapper/luks rootflags=subvol=@root quiet
+```
+
+For unencrypted volumes.
+
+```shell
+options     rw root=UUID=<uuid> rootflags=subvol=@root quiet
 ```
 
 > vim /boot/loader/entries/emergency.conf
 
 ```shell
-title         Emergency Mode
-options     rw luks.uuid=<uuid> luks.name=<uuid>=luks root=/dev/mapper/luks rootflags=subvol=@root quiet mem_sleep_default=deep systemd.unit=rescue.target
+title       Emergency Mode
+options     rw luks.uuid=<uuid> luks.name=<uuid>=luks root=/dev/mapper/luks rootflags=subvol=@root quiet systemd.unit=rescue.target
 ```
 
 Set default entry at start.
