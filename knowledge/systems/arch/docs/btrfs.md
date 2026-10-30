@@ -6,6 +6,16 @@
 
 ## Mount Btrfs volumes
 
+### Unencrypted
+
+```shell
+mount -o subvol=@root /dev/nvme0n1p2 /mnt
+mount -o subvol=@home /dev/nvme0n1p2 /mnt/home
+mount /dev/nvme0n1p1 /mnt/boot
+```
+
+### Encrypted
+
 ```shell
 cryptsetup open /dev/nvme0n1p2 luks
 mount -o subvol=@root /dev/mapper/luks /mnt
