@@ -187,6 +187,12 @@ SuccessExitStatus=143
 WantedBy=default.target
 ```
 
+link it
+
+```shell
+systemctl --user link openchamber.service
+```
+
 set password for web ui
 
 ```shell
@@ -228,11 +234,13 @@ on connect (left bottom corner `Local`) password will be asked once > trust the 
 
 ##### phone
 
-in the desktop app on the same machine goto settings > remote instances > connect to this server > add device.
+on the same machine:
+
+in the desktop app goto settings > remote instances > connect to this server > add device.
 scan the qr code with your phone.
 
-alternatively, from the commandline:
+on another machine:
 
 ```shell
-openchamber connect-url --port 3000 --qr
+openchamber connect-url --port 3000 --qr --name hostname
 ```
