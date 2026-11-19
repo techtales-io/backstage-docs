@@ -234,7 +234,7 @@ create systemd unit for the backend `hermes.service`
 ```shell
 [Unit]
 Description=Hermes Agent backend
-After=network-online.target hermes-gateway.service
+After=network-online.target
 Wants=network-online.target
 
 [Service]
