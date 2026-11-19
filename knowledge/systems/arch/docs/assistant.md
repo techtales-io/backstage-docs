@@ -57,39 +57,6 @@ SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", MODE="0660", GROUP="users"
 
 then restart! an udev trigger is not enough.
 
-### Setup shared space
-
-#### Create the wiki dir
-
-setgid (2) keeps dirs in users group
-
-```shell
-sudo mkdir -p /srv/shared/documents
-sudo chown root:users /srv/shared/documents
-sudo chmod 2775 /srv/shared/documents
-```
-
-assistant owns this wiki.
-
-#### Create assistant dir and symlinks for read access
-
-```shell
-sudo mkdir -p /srv/shared/assistant
-sudo mkdir -p /srv/shared/assistant/{context,plans,specs}
-sudo chown -R assistant:users /srv/shared/assistant
-sudo chown root:users /srv/shared/assistant
-sudo chmod 2775 /srv/shared/assistant
-ln -s /srv/shared/assistant ~/notes/
-```
-
-If you have syncthing, you can setup it now and wait for the files to sync.
-if you need to adjust the permissions anytime:
-
-```shell
-sudo find /srv/shared/assistant -type d -exec chmod 2775 {} +
-sudo find /srv/shared/assistant -type f -exec chmod 0664 {} +
-```
-
 ## Setup Assistant
 
 The following is done as assistant user (via login/ssh).
@@ -107,7 +74,13 @@ logout and ssh to the assistant.
 ssh assistant
 ```
 
+### Setup Home
+
 if you have dotfiles for the assistant, you can check them out now and run setup.
+
+if you have syncthing, you can setup a ~/notes folder for the assistant.
+this folder can be synced to other homes as well, simply enable syncthing service for the user.
+See [syncthing.md](./syncthing.md)
 
 ### Setup Git signing
 
