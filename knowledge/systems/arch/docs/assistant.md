@@ -223,10 +223,16 @@ openchamber connect-url --port 3000 --qr --name hostname
 
 ### Setup as assistant user
 
-install hermes on the assistant (headless).
+install hermes on the assistant.
 
 ```shell
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --skip-browser --skip-computer-use
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+```
+
+verify
+
+```shell
+hermes gateway status
 ```
 
 create systemd unit for the backend `hermes.service`
@@ -234,7 +240,7 @@ create systemd unit for the backend `hermes.service`
 ```shell
 [Unit]
 Description=Hermes Agent backend
-After=network-online.target
+After=network-online.target hermes-gateway.service
 Wants=network-online.target
 
 [Service]
