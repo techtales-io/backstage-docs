@@ -94,10 +94,10 @@ Add env variable to f.e. ~/.zshenv:
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"
 ```
 
-Enable and start ssh tpm agent service (part of `ssh-tpm-agent`).
+Enable and start ssh tpm agent socket (part of `ssh-tpm-agent`).
 
 ```shell
-systemctl --user enable --now ssh-tpm-agent.service
+systemctl --user enable --now ssh-tpm-agent.socket
 ```
 
 Verify.
