@@ -127,9 +127,9 @@ _.file = [
 
 don't forget to adjust your assistant's permissions so that it cannot read files from the secrets folder.
 
-### Setup Openchamber
+## Setup Openchamber
 
-#### Setup in assistant user
+### Setup in assistant user
 
 install Openchamber and Opencode with bun to keep update functionality.
 
@@ -185,11 +185,11 @@ verify
 systemctl status --user openchamber.service
 ```
 
-#### Setup in main user
+### Setup in main user
 
 download and install app from `https://openchamber.dev/download/`.
 
-##### desktop app
+#### desktop app
 
 ```shell
 mkdir -p ~/.local/bin
@@ -205,7 +205,7 @@ http://127.0.0.1:3000
 
 on connect (left bottom corner `Local`) password will be asked once > trust the device.
 
-##### phone
+#### phone
 
 on the same machine:
 
