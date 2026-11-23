@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD024 -->
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD046 -->
 
@@ -57,39 +58,6 @@ SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", MODE="0660", GROUP="users"
 
 then restart! an udev trigger is not enough.
 
-### Setup shared space
-
-#### Create the wiki dir
-
-setgid (2) keeps dirs in users group
-
-```shell
-sudo mkdir -p /srv/shared/documents
-sudo chown root:users /srv/shared/documents
-sudo chmod 2775 /srv/shared/documents
-```
-
-assistant owns this wiki.
-
-#### Create assistant dir and symlinks for read access
-
-```shell
-sudo mkdir -p /srv/shared/assistant
-sudo mkdir -p /srv/shared/assistant/{context,plans,specs}
-sudo chown -R assistant:users /srv/shared/assistant
-sudo chown root:users /srv/shared/assistant
-sudo chmod 2775 /srv/shared/assistant
-ln -s /srv/shared/assistant ~/notes/
-```
-
-If you have syncthing, you can setup it now and wait for the files to sync.
-if you need to adjust the permissions anytime:
-
-```shell
-sudo find /srv/shared/assistant -type d -exec chmod 2775 {} +
-sudo find /srv/shared/assistant -type f -exec chmod 0664 {} +
-```
-
 ## Setup Assistant
 
 The following is done as assistant user (via login/ssh).
@@ -107,7 +75,13 @@ logout and ssh to the assistant.
 ssh assistant
 ```
 
+### Setup Home
+
 if you have dotfiles for the assistant, you can check them out now and run setup.
+
+if you have syncthing, you can setup a ~/notes folder for the assistant.
+this folder can be synced to other homes as well, simply enable syncthing service for the user.
+See [syncthing.md](./syncthing.md)
 
 ### Setup Git signing
 
@@ -154,9 +128,9 @@ _.file = [
 
 don't forget to adjust your assistant's permissions so that it cannot read files from the secrets folder.
 
-### Setup Openchamber
+## Setup Openchamber
 
-#### Setup in assistant user
+### Setup as assistant user
 
 install Openchamber and Opencode with bun to keep update functionality.
 
@@ -212,11 +186,11 @@ verify
 systemctl status --user openchamber.service
 ```
 
-#### Setup in main user
+### Setup as main user
 
 download and install app from `https://openchamber.dev/download/`.
 
-##### desktop app
+#### desktop app
 
 ```shell
 mkdir -p ~/.local/bin
@@ -232,7 +206,7 @@ http://127.0.0.1:3000
 
 on connect (left bottom corner `Local`) password will be asked once > trust the device.
 
-##### phone
+#### phone
 
 on the same machine:
 
@@ -243,4 +217,117 @@ on another machine:
 
 ```shell
 openchamber connect-url --port 3000 --qr --name hostname
+```
+
+## Setup Hermes
+
+### Setup as assistant user
+
+install hermes on the assistant.
+
+```shell
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+```
+
+verify
+
+```shell
+hermes gateway status
+```
+
+create systemd unit for the backend `hermes.service`
+
+```shell
+[Unit]
+Description=Hermes Agent backend
+After=network-online.target hermes-gateway.service
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=%h/.hermes
+
+Environment=PATH=%h/.local/share/mise/shims:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=%h/.local/bin/hermes serve --host 0.0.0.0 --port 9119 --skip-build
+
+Restart=always
+RestartSec=5
+RestartPreventExitStatus=78
+
+[Install]
+WantedBy=default.target
+```
+
+link it
+
+```shell
+systemctl --user link hermes.service
+```
+
+next configure the hermes backend.
+
+the password hash needs to be encrypted with scrypt.
+
+```shell
+cd ~/.hermes/hermes-agent && \
+PYTHONPATH="$PWD" ~/.hermes/installs/*/environments/*/venv/bin/python -c \
+'import getpass; from plugins.dashboard_auth.basic import hash_password; print(hash_password(getpass.getpass("Password: ")))'
+```
+
+add to `~/.hermes/.env`
+
+```shell
+# Dashboard login
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME=<your user>
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH='scrypt$...'
+HERMES_DASHBOARD_BASIC_AUTH_SECRET=<output of: openssl rand -base64 32>
+```
+
+protect the .env
+
+```shell
+chmod 600 ~/.hermes/.env
+```
+
+enable and start
+
+```shell
+systemctl enable --now --user hermes.service
+```
+
+verify
+
+```shell
+systemctl status --user hermes.service
+```
+
+optional setup rtk for hermes. rtk token saver needs to be in path.
+
+```shell
+rtk init --agent hermes
+```
+
+### Setup as main user
+
+install hermes on the main user.
+
+```shell
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --skip-browser --skip-computer-use --include-desktop
+```
+
+#### desktop app
+
+add a menu entry for hermes-desktop to `~/.local/bin/`.
+
+```shell
+#!/usr/bin/env bash
+exec hermes desktop "$@"
+```
+
+in the desktop app goto settings > gateways > primary gateway.
+add server, auth to it, enable encrypt saved secrets with the OS keychain and click save.
+
+on the same machine:
+
+```shell
+http://127.0.0.1:9119
 ```
